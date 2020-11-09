@@ -21,7 +21,17 @@ module Feishu
       Config.new
     end
   end
+
+  def cipher
+    @cipher ||= begin
+      require 'feishu/cipher'
+      Cipher.new(config.encrypt_key)
+    end
+  end
 end
 
-require 'feishu/client'
 require 'feishu/access_token'
+require 'feishu/client.rb'
+require 'feishu/user_client'
+require 'feishu/approval_client'
+require 'feishu/message_client'

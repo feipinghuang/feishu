@@ -6,6 +6,8 @@ module Feishu
                 :app_secret,
                 :encrypt_key,
                 :verification_token,
-                :uri
+                :uri,
+                :approval_uri,
+                :message_uri
   end
 end

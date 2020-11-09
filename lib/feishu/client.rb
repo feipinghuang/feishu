@@ -1,39 +1,39 @@
-require 'feishu/api/user'
-
 module Feishu
   class Client
     include HTTParty
-    include Feishu::Api::User
 
-    debug_output $stdout
     format :json
 
-    query_string_normalizer proc { |query|
-      query.map do |key, value|
-        value.map {|v| "#{key}=#{v}"}
-      end.join('&')
-    }
+    disable_rails_query_string_format
 
     def initialize
-      self.class.base_uri(Feishu.config.uri)
-      self.class.default_options.merge!(headers: { "Authorization": "Bearer #{AccessToken.new.tenant_access_token}" })
+      self.class.default_options.merge!(headers: { 
+        "Authorization": "Bearer #{AccessToken.new.tenant_access_token}",
+        "Content-Type": 'application/json'
+      })
     end
 
     def get(path, query: {})
       response = self.class.get(path, query: query)
       handle_response(response.parsed_response)
+    rescue Feishu::AccessTokenExpiredError
+      Redis.current.del(:tenant_access_token)
+      retry
     end
 
-    def post(path, body: {})
-      response = self.class.get(path, query: query)
+    def post(path, multipart: false, body: {})
+      response = self.class.post(path, multipart: multipart, body: multipart ? body : body.to_json)
       handle_response(response.parsed_response)
+    rescue Feishu::AccessTokenExpiredError
+      Redis.current.del(:tenant_access_token)
+      retry
     end
 
     private
     def handle_response(response)
       case response['code']
       when 0
-        response['data']
+        response.fetch('data')
       when 99991663, 99991664
         raise Feishu::AccessTokenExpiredError
       else
