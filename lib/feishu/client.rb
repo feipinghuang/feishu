@@ -17,7 +17,7 @@ module Feishu
       response = self.class.get(path, query: query)
       handle_response(response.parsed_response)
     rescue Feishu::AccessTokenExpiredError
-      Redis.current.del(:tenant_access_token)
+      AccessToken.new.clear_cache
       retry
     end
 
@@ -25,7 +25,7 @@ module Feishu
       response = self.class.post(path, multipart: multipart, body: multipart ? body : body.to_json)
       handle_response(response.parsed_response)
     rescue Feishu::AccessTokenExpiredError
-      Redis.current.del(:tenant_access_token)
+      AccessToken.new.clear_cache
       retry
     end
 
