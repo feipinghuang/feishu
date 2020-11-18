@@ -13,6 +13,11 @@ module Feishu
         res = batch_get_id(mobiles:[mobile])
         res['mobile_users'][mobile].first['user_id']
       end
+
+      def get_user_id_by_union_id(union_id)
+        res = get('/user/v1/union_id/batch_get/list', query: { union_ids: [union_id] })
+        res['user_infos'][union_id]['user_id']
+      end
     end
   end
 end
