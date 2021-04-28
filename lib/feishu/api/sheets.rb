@@ -12,7 +12,10 @@ module Feishu
       def values_batch_get(spreadsheet_token, ranges)
         get(
           "/sheets/v2/spreadsheets/#{spreadsheet_token}/values_batch_get",
-          query: { ranges: ranges.join(',') },
+          query: {
+            ranges: ranges.join(','),
+            dateTimeRenderOption: 'FormattedString',
+          },
         )
       end
     end
