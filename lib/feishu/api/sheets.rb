@@ -18,6 +18,13 @@ module Feishu
           },
         )
       end
+
+      def sheets_batch_update(spreadsheet_token, requests)
+        post(
+          "/sheets/v2/spreadsheets/#{spreadsheet_token}/sheets_batch_update",
+          body: { requests: requests },
+        )
+      end
     end
   end
 end
