@@ -19,6 +19,13 @@ module Feishu
         )
       end
 
+      def values_prepend(spreadsheet_token, value_range)
+        post(
+          "/sheets/v2/spreadsheets/#{spreadsheet_token}/values_prepend",
+          body: { "valueRange": value_range },
+        )
+      end
+
       def sheets_batch_update(spreadsheet_token, requests)
         post(
           "/sheets/v2/spreadsheets/#{spreadsheet_token}/sheets_batch_update",
