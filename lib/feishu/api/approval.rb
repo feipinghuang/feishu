@@ -10,11 +10,22 @@ module Feishu
       end
 
       def instance_create(approval_code:, user_id:, form: [])
-        post('/instance/create', body: { approval_code: approval_code, user_id: user_id, form: form })
+        post(
+          '/instance/create',
+          body: { approval_code: approval_code, user_id: user_id, form: form },
+        )
+      end
+
+      def instance_search(options)
+        post('/instance/search', body: options)
       end
 
       def file_upload(name:, type:, content:)
-        post('/file/upload', multipart: true, body: { name: name, type: type, content: content })
+        post(
+          '/file/upload',
+          multipart: true,
+          body: { name: name, type: type, content: content },
+        )
       end
 
       def subscribe(approval_code)
@@ -22,7 +33,10 @@ module Feishu
       end
 
       def unsubscribe(approval_code)
-        post('/subscription/unsubscribe', body: { approval_code: approval_code })
+        post(
+          '/subscription/unsubscribe',
+          body: { approval_code: approval_code },
+        )
       end
     end
   end

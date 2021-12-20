@@ -3,7 +3,6 @@ module Feishu
     include HTTParty
 
     format :json
-    debug_output $stdout
 
     disable_rails_query_string_format
 
