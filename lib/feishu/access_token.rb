@@ -16,9 +16,14 @@ module Feishu
       Redis.current.get(:app_access_token) || _app_access_token
     end
 
+    def jsapi_ticket
+      Redis.current.get(:jsapi_ticket) || _jsapi_ticket
+    end
+
     def clear_cache
       Redis.current.del(:tenant_access_token)
       Redis.current.del(:app_access_token)
+      Redis.current.del(:jsapi_ticket)
     end
 
     def user_access_token(grant_type: 'authorization_code', code:)
@@ -77,6 +82,23 @@ module Feishu
         response['tenant_access_token'],
       )
       response['tenant_access_token']
+    end
+
+    def _jsapi_ticket
+      response =
+        self.class.post(
+          '/jssdk/ticket/get',
+          headers: {
+            "Authorization": "Bearer #{AccessToken.new.tenant_access_token}",
+            "Content-Type": 'application/json',
+          },
+        )
+      Redis.current.setex(
+        :jsapi_ticket,
+        response['data']['expire_in'] - 5,
+        response['data']['ticket'],
+      )
+      response['data']['ticket']
     end
   end
 end
