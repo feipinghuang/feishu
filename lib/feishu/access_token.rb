@@ -48,18 +48,6 @@ module Feishu
       )
     end
 
-    def jsapi_ticket
-      # post('/jssdk/ticket/get')
-      self.class.post(
-        '/jssdk/ticket/get',
-        headers: {
-          "Authorization": "Bearer #{AccessToken.new.tenant_access_token}",
-          "Content-Type": 'application/json',
-        },
-        body: { grant_type: grant_type, refresh_token: refresh_token }.to_json,
-      )
-    end
-
     private
 
     def _tenant_access_token
