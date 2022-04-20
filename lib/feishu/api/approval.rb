@@ -9,10 +9,15 @@ module Feishu
         post('/instance/get', body: { instance_code: instance_code })
       end
 
-      def instance_create(approval_code:, user_id:, form: [])
+      def instance_create(approval_code:, user_id:, form: [], node_approver_user_id_list: nil)
         post(
           '/instance/create',
-          body: { approval_code: approval_code, user_id: user_id, form: form },
+          body: {
+            approval_code: approval_code,
+            user_id: user_id,
+            form: form,
+            node_approver_user_id_list: node_approver_user_id_list
+          },
         )
       end
 
